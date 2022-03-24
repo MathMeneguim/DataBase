@@ -1,0 +1,102 @@
+DROP TABLE TGIF purge;
+
+CREATE TABLE TGIF
+(CODIGO     NUMBER(5),
+ NOME       VARCHAR2(30),
+ SALARIO    NUMBER(9,2));
+ 
+DECLARE 
+ V_MAX_SAL EMP.SAL%TYPE; -- %Type -- percent type
+ V_MAX_COD EMP.EMPNO%TYPE;
+
+BEGIN
+    SELECT MAX(SAL) 
+        INTO V_MAX_SAL
+        FROM EMP
+        WHERE JOB ='SALESMAN';
+        
+    SELECT MAX(EMPNO)
+        INTO V_MAX_COD
+        FROM EMP;
+        
+    UPDATE TGIF 
+        SET SALARIO = V_MAX_SAL * 1.10 
+        WHERE CODIGO = V_MAX_COD + 10; 
+        
+    DBMS_OUTPUT.PUT_LINE ('MAIOR SALARIO'|| V_MAX_SAL);
+    DBMS_OUTPUT.PUT_LINE ('ULTIMO EMPREGADO'|| V_MAX_COD);
+    v_max_cod := v_max_cod + 10;
+    v_max_sal := v_max_sal * 1.10;
+    DBMS_OUTPUT.PUT_LINE ('NOVO MAIOR SALARIO'|| V_MAX_SAL);
+    DBMS_OUTPUT.PUT_LINE ('NOVO ULTIMO EMPREGADO'|| V_MAX_COD);
+    INSERT INTO TGIF VALUES (V_MAX_COD + 10, 'Novo Funcionario', v_max_sal * 1.10); -- INSERT INTO TGIF VALUES (V_MAX_COD + 10, 'Novo Funcionario' || (V_MAX_COD - 34), v_max_sal * 1.10);
+    
+END;
+/ -- por que colocar / no final do codigo(?)
+
+    SELECT * FROM TGIF;
+/*DECLARE
+    V_MAX_COD EMP.EMPNO%TYPE;
+BEGIN
+    SELECT MAX(EMPNO)
+    INTO V_MAX_COD
+    FROM EMP;
+DELETE TGIF WHERE CODIGO = v_max_cod + 10;
+END;*/ --quando utilizar(?)
+
+
+/*
+CREATE TABLE dept1
+(DEPTNO NUMBER(2),
+DNAME VARCHAR2(14),
+LOC VARCHAR2(13));
+
+
+
+INSERT INTO DEPT1 VALUES (10, 'ACCOUNTING','NEW YORK');
+INSERT INTO DEPT1 VALUES (20, 'RESEARCH', 'DALLAS');
+INSERT INTO DEPT1 VALUES (30, 'SALES', 'CHICAGO');
+INSERT INTO DEPT1 VALUES (40, 'OPERATIONS','BOSTON');
+
+
+
+CREATE TABLE dept_online
+(DEPTNO NUMBER(2),
+DNAME VARCHAR2(14),
+LOC VARCHAR2(13));
+
+
+
+INSERT INTO DEPT_ONLINE VALUES (40, 'OPERATIONS', 'BOSTON');
+INSERT INTO DEPT_ONLINE VALUES (20, 'RESEARCH DEV','DALLAS');
+INSERT INTO DEPT_ONLINE VALUES (50, 'ENGINEERING', 'WEXFORD');
+INSERT INTO DEPT_ONLINE VALUES (60, 'MANAGER', 'MIAMI');
+
+
+
+COMMIT;
+
+
+
+SELECT * FROM dept1;
+
+
+
+SELECT * FROM dept_online;
+
+
+
+MERGE INTO dept1 d
+USING dept_online o
+ON (d.deptno = o.deptno)
+WHEN MATCHED THEN
+UPDATE SET d.dname = o.dname, d.loc = o.loc
+WHEN NOT MATCHED THEN
+INSERT (d.deptno, d.dname, d.loc)
+VALUES (o.deptno, o.dname, o.loc);
+
+
+
+SELECT * FROM dept1;
+*/
+
